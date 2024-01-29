@@ -77,7 +77,7 @@ export const covidEssentialsData= [
     {
         id:6,
         desc:"Savlon Surface Disinfectant Spray 170g",
-        company:"SAVLON",
+        company:"VOLINI",
         img1: "https://cdn01.pharmeasy.in/dam/products_otc/O26428/savlon-surface-disinfectant-spray-170g-2-1654234199.jpg?dim=320x320&dpr=1&q=100",
         img2: "https://cdn01.pharmeasy.in/dam/products_otc/O26428/savlon-surface-disinfectant-spray-170g-6.1-1641788812.jpg?dim=100x0&dpr=1&q=100",
         img3: "https://cdn01.pharmeasy.in/dam/products_otc/O26428/savlon-surface-disinfectant-spray-170g-6.2-1641788809.jpg?dim=100x0&dpr=1&q=100",

@@ -1,9 +1,9 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Link } from "react-router-dom";
-import { allCatagoryMenu } from "../../Media/allCatagoryMenu";
+import { productsData } from "../../Media/products";
 
-const AllCatagorymenu = () => {
+const SubCatagory = () => {
   return (
     <Flex
       height={"762px"}
@@ -11,7 +11,7 @@ const AllCatagorymenu = () => {
       flexWrap={"wrap"}
       justify="space-between"
     >
-      {allCatagoryMenu.map((elem) => {
+      {productsData.map((elem) => {
         const {id}=elem
         return (
            <Flex
@@ -25,7 +25,7 @@ const AllCatagorymenu = () => {
             transition="all 0.4s ease"
             _hover={{boxShadow:"rgba(22, 135, 110, 1) 0px 0px 5px 2px ",transition:"all 0.4s ease", transform:"scale(1.02)"}}
           >
-           <Link to="/SubCategory"> <Flex h="112px" w="325px"  p=" 20px">
+           <Link to="/SingleProduct"> <Flex h="112px" w="325px"  p=" 20px">
               <Flex w="28%">
                 <Image w="90%" src={elem.img} />
               </Flex>
@@ -49,4 +49,4 @@ const AllCatagorymenu = () => {
   );
 };
 
-export default AllCatagorymenu;
+export default SubCatagory;

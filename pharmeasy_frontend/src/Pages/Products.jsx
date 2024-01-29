@@ -32,6 +32,18 @@ import StatisticsAllCatagory from "../Components/AllCatagoriesComponents/Statist
 import { useDispatch, useSelector } from "react-redux";
 import { getProducts } from "../Redux/Products/action";
 import axios from "axios";
+import Lottie from 'lottie-react';
+// import animationData from './path-to-your-animation.json';
+
+// const MyComponent = () => {
+//   return (
+//     <Lottie
+//       // animationData={animationData}
+//       loop
+//       autoplay
+//     />
+//   );
+// };
 
 const Products = () => {
 

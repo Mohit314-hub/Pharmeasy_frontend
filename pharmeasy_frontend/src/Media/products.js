@@ -143,20 +143,5 @@ export const productsData= [
         "OrigionalPrice": 120,
         "offer": 21,
     },
-    {
-        "id":19,
-        "img": "https://cdn01.pharmeasy.in/dam/products_otc/D44788/cremaffin-trial-stick-pack-of-15ml-pack-of-5-mint-2-1651912372.jpg",
-        "name": "Cremaffin Trial Stick Pack Of 15ml (Pack Of 2)",
-        "price": 59,
-        "OrigionalPrice": 70,
-        "offer": 15,
-    },
-    {
-        "id":20,
-        "img": "https://cdn01.pharmeasy.in/dam/products_otc/J78271/dr-morepen-garcinia-cambogia-for-weight-loss-800mg-with-60-hca-60-capsules-2-1641793812.jpg",
-        "name": "Dr Morepen Garcinia Cambogia For Weight Gain",
-        "price": 449,
-        "OrigionalPrice": 899,
-        "offer": 50,
-    },
+   
 ]
