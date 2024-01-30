@@ -44,7 +44,7 @@ export default function LabTestCarousalCards({ elem }) {
               w="90%"
               h="90%"
               // boxSize="100%"
-              src={elem.img}
+              src={elem.photo}
             />
           </Flex>
           <Flex direction="column" w="100%" px="8px" h="45%" color="#4f585e">
@@ -58,11 +58,11 @@ export default function LabTestCarousalCards({ elem }) {
               w="100%"
               padding="8px 0"
             >
-              {elem.head}
+              {elem.product_name}
             </Text>
             <Text textAlign="left" fontSize="14px" fontWeight="400" py="5px">
               {" "}
-              {elem.desc}{" "}
+              {elem.description}{" "}
             </Text>
             <Text
               textAlign="left"
@@ -85,9 +85,9 @@ export default function LabTestCarousalCards({ elem }) {
             <Box color="#4f585e">
               <Text fontWeight="700">
                 ₹{elem.price} &nbsp;
-                <span style={{ fontWeight: "400", fontSize: "14px" }}>
+                {/* <span style={{ fontWeight: "400", fontSize: "14px" }}>
                   Onwards
-                </span>{" "}
+                </span>{" "} */}
               </Text>
             </Box>
             <Flex
@@ -110,7 +110,7 @@ export default function LabTestCarousalCards({ elem }) {
                 transition:"all 0.4s ease"
               }}
             >
-              <Text fontSize="15px">Book Now</Text>
+              <Text fontSize="15px">Add to cart</Text>
               <FiChevronRight style={{ fontSize: "22px" }} />
             </Flex>
           </Flex>

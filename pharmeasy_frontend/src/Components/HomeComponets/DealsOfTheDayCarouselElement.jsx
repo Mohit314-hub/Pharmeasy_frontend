@@ -27,7 +27,7 @@ const settings = {
   slidesToScroll: 1,
 };
 
-export default function DealsOfTheDayCarouselElement() {
+export default function DealsOfTheDayCarouselElement({products}) {
 
   const [slider, setSlider] = React.useState()
 
@@ -90,7 +90,7 @@ export default function DealsOfTheDayCarouselElement() {
       </IconButton>
       {/* Slider */}
       <Slider  {...settings} ref={(slider) => setSlider(slider)}>
-        {productsData.map((elem, index) => (
+        {products.map((elem, index) => (
           <DealsOfTheDayCarouselCards key={elem.id} elem={elem}/>
         ))}
       </Slider>

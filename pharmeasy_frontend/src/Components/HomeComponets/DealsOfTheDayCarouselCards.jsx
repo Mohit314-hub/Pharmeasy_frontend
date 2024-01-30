@@ -46,7 +46,7 @@ export default function DealsOfTheDayCarouselCards({ elem }) {
               transition="all 0.4s ease"
               // boxSize="100%"
               _hover={{ transform: "scale(1.2)", transition: "all 0.4s ease" }}
-              src={elem.img}
+              src={elem.photo}
             />
           </Flex>
           <Flex direction="column" w="100%" h="30%" color="#4f585e" px="5px">
@@ -61,13 +61,13 @@ export default function DealsOfTheDayCarouselCards({ elem }) {
               w="100%"
               padding="8px 0"
             >
-              {elem.name}
+              {elem.product_name}
             </Text>
             <Text textAlign="left" fontSize="14px" fontWeight="400">
               {" "}
-              {elem.desc}{" "}
+              {elem.desciption}{" "}
             </Text>
-            <Box h="20px">
+            {/* <Box h="20px">
               {elem.OrigionalPrice && (
                 <Text
                   textAlign="left"
@@ -78,11 +78,11 @@ export default function DealsOfTheDayCarouselCards({ elem }) {
                   {" "}
                   MRP{" "}
                   <span style={{ textDecoration: "line-through" }}>
-                    ₹{elem.OrigionalPrice}
+                    ₹{elem.price}
                   </span>{" "}
                 </Text>
               )}
-            </Box>
+            </Box> */}
             {elem.price && (
               <Text textAlign="left" fontSize="16px" fontWeight="700">
                 {" "}
@@ -90,7 +90,7 @@ export default function DealsOfTheDayCarouselCards({ elem }) {
               </Text>
             )}
           </Flex>
-          {elem.offer && (
+          {/* {elem.offer && (
             <Flex
               h="1.7rem"
               w="40%"
@@ -106,7 +106,7 @@ export default function DealsOfTheDayCarouselCards({ elem }) {
                 {elem.offer}% OFF
               </Text>
             </Flex>
-          )}
+          )} */}
         </Flex>
       </Stack>
     </Center>

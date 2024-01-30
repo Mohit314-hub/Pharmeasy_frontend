@@ -30,17 +30,21 @@ import { Link } from "react-router-dom";
 import { LoginIndivisualSlider } from "./NavbarComponents/LoginIndivisualSlider";
 import { getCartItems } from "../Redux/Cart/action";
 import UploadSlider from "../Components/NavbarComponents/UploadSlider.jsx"; // Import the UploadSlider component
+import { fetchTenant } from "../Redux/Company/action.js";
+import { fetchTenantDetails } from "../api/HomeAPi.js";
+import { debounce } from "../utils/deboundeUtil.js";
 
-const Navbar = () => {
+const Navbar = (props) => {
   const { isOpen, onToggle } = useDisclosure();
   const { isOpen: isUploadOpen, onOpen: onUploadOpen, onClose: onUploadClose } = useDisclosure();
+  const tenant = useSelector((store)=>store.tenant.details)
 
   const [nav, setNav] = useState(false);
 
   window.onscroll = function () {
     scrollFunction();
   };
-
+  
   function scrollFunction() {
     if (
       document.body.scrollTop > 80 ||
@@ -58,6 +62,27 @@ const Navbar = () => {
 
   //! total cart items
   const dispatch = useDispatch();
+  const [tenantDetails, setTenantDetails] = useState([]);
+  const isLoggedIn = localStorage.getItem("auth_token")
+  const setTitle = (data)=>{
+        const fevicon = data.logo ;
+        const title = data.title || 'Aiktech pharmacy Template';
+
+        document.getElementById('websiteFevicon').setAttribute('href', fevicon);
+        document.getElementById('websiteTitle').innerText = title;
+  }
+  const getCompanyDetails =async ()=>{
+    const response = await fetchTenantDetails();
+    console.log(response.data,"tenant details");
+    setTitle(response.data)
+    setTenantDetails(response.data)
+    dispatch(fetchTenant(response.data))
+  }
+  useEffect(()=>{
+    if(tenant.length === 0){
+      getCompanyDetails()  
+    }
+  },[])
   useEffect(() => {
     if (userId) {
       dispatch(getCartItems(userId));
@@ -65,6 +90,7 @@ const Navbar = () => {
   }, [dispatch]);
 
   const cartData = useSelector((store) => store.cart.cart);
+  console.log(tenant,"tenant");
 
   return (
     <Box height={nav ? "123px" : "80px"}>
@@ -85,7 +111,7 @@ const Navbar = () => {
           </Flex>
           <Flex width="14%" height="100%" align="start" marginRight={"10px"}>
             <Link to="/">
-              <Image box-sizing="border-box " maxWidth="100%" maxHeight="100%" margin="0px " padding="0px " vertical-align="baseline" src={logo} />
+              <Image box-sizing="border-box " maxWidth="100%" maxHeight="4rem" margin="0px " padding="0px " vertical-align="baseline" src={tenant?.logo} />
             </Link>
           </Flex>
           <Box height="100%" w="100%">
@@ -106,22 +132,16 @@ const Navbar = () => {
                   focusBorderColor="none"
                   letterSpacing=".1px"
                   fontWeight="400"
+                  onChange={debounce((event) => {
+                    props.search(event.target.value);
+                  }, 400)}
                 />
                 <Box className="searchBtn" w="6%" height="99.8%">
                   <Button w="100%" height="100%" borderLeftRadius="0">
                     <SearchIcon color="#8897a2" size="3rem" fontWeight="bold" />
                   </Button>
                 </Box>
-                <Text
-                  transition="all .4s ease"
-                  borderBottom="2px solid rgba(16, 132, 126, 0) "
-                  paddding="2px"
-                  color="white"
-                  
-                  onClick={onUploadOpen} // Open the UploadSlider when clicked
-                >
-                  Upload with prescription
-                </Text>
+                
               
                   
                     {/* <Button w="100%" height="100%" color="green">
@@ -130,11 +150,19 @@ const Navbar = () => {
                  <UploadSlider/>
                 
               </Flex>
-              {!nav && (
+              { (
                 <HStack w="22%" justify="space-between" px={"2%"}>
                   <Flex>
                     <Image src="https://assets.pharmeasy.in/web-assets/dist/5eb42971.svg" />
-                    <LoginSignupSlider />
+                    {
+                      isLoggedIn?(
+                        <div>continue</div>
+                      ):(
+                        <LoginSignupSlider />
+                      )
+                    }
+
+
                   </Flex>
                   <Link to="/cart">
                     <Flex position="relative">
@@ -148,77 +176,7 @@ const Navbar = () => {
                 </HStack>
               )}
             </Box>
-            {nav && (
-              <Flex display={{ base: "none", md: "flex" }} ml={10} h="50%" align="end">
-                <Flex height="60%" width="100%" justify="space-between" align="center">
-                  <Flex width="42%" h="100%" justify="space-between" color="white" align="center" fontSize="16px">
-                    <Link to="/healthcare">
-                      <Text
-                        transition="all .4s ease"
-                        borderBottom="2px solid rgba(16, 132, 126, 0) "
-                        _hover={{
-                          borderBottom: "2px solid white",
-                          transition: "all .4s ease",
-                        }}
-                      >
-                        Order Medicines
-                      </Text>
-                    </Link>
-                    <Link to="/healthcare">
-                      <Text
-                        transition="all .4s ease"
-                        borderBottom="2px solid rgb(16, 132, 126, 0) "
-                        _hover={{
-                          borderBottom: "2px solid white",
-                          transition: "all .4s ease",
-                        }}
-                      >
-                        Healthcare Products
-                      </Text>
-                    </Link>
-                    <Text
-                      transition="all .4s ease"
-                      borderBottom="2px solid rgb(16, 132, 126, 0) "
-                      _hover={{
-                        borderBottom: "2px solid white",
-                        transition: "all .4s ease",
-                      }}
-                    >
-                      Lab Tests
-                    </Text>
-                    <Text
-                      transition="all .4s ease"
-                      borderBottom="2px solid rgb(16, 132, 126, 0) "
-                      _hover={{
-                        borderBottom: "2px solid white",
-                        transition: "all .4s ease",
-                      }}
-                    >
-                      RTPCR
-                    </Text>
-                  </Flex>
-                  <Flex width="32%" h="100%" justify="space-between" px="26px" align="center">
-                    <Flex>
-                      <Image src="https://assets.pharmeasy.in/web-assets/dist/275c07e1.svg" />
-                      <Text color="white">Offers</Text>
-                    </Flex>
-                    <Flex>
-                      <Image src="https://assets.pharmeasy.in/web-assets/dist/5eb42971.svg" />
-                      <LoginIndivisualSlider font={"16px"} color={"#fff"} />
-                    </Flex>
-                    <Link to="/cart">
-                      <Flex position="relative">
-                        <Image src="https://assets.pharmeasy.in/web-assets/dist/21b0b5ba.svg" />
-                        <Text color="white">Cart</Text>
-                        <Center position="absolute" left="-3" top="-2" variant="solid" bg="#f76b6c" colorscheme="#f76b6c" borderRadius="50" w="1.6rem" h="1rem" color="white" fontSize="11" fontWeight="bold">
-                          {cartData?.length}
-                        </Center>
-                      </Flex>
-                    </Link>
-                  </Flex>
-                </Flex>
-              </Flex>
-            )}
+          
           </Box>
         </Flex>
 

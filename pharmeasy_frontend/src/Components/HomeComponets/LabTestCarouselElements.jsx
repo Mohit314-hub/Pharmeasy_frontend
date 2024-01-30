@@ -29,7 +29,7 @@ const settings = {
   slidesToScroll: 1,
 };
 
-export default function LabTestCarouselElements() {
+export default function LabTestCarouselElements({products}) {
 
   const [slider, setSlider] = React.useState()
 
@@ -91,7 +91,7 @@ export default function LabTestCarouselElements() {
       </IconButton>
       {/* Slider */}
       <Slider  {...settings} ref={(slider) => setSlider(slider)}>
-        <Stack textAlign="left" h="14rem" paddingLeft="0" display="flex">
+        {/* <Stack textAlign="left" h="14rem" paddingLeft="0" display="flex">
             <Flex w="100%" align="center">
                 <GrAchievement/>
                 <Text px="5px"> 100+ Certified Labs</Text>
@@ -108,8 +108,8 @@ export default function LabTestCarouselElements() {
                 <MdOutlineDocumentScanner/>
                 <Text px="5px">Accurate Reports</Text>
             </Flex>
-        </Stack>
-        {labTest.map((elem, index) => (
+        </Stack> */}
+        {products?.length!==0 && products.map((elem, index) => (
           <LabTestCarousalCards key={elem.id} elem={elem}/>
         ))}
       </Slider>

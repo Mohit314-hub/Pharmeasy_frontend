@@ -16,9 +16,13 @@ import { AiOutlineInstagram } from "react-icons/ai";
 import { AiOutlineTwitter } from "react-icons/ai";
 import { FaFacebookF } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 
 export default function LargeWithLogoCentered() {
+  const tenant = useSelector((store)=>store.tenant.details);
+  const categories = useSelector((store)=>store.categories.list);
+  
   return (
     <Box bg="#f4f7fb" color={useColorModeValue("gray.700", "gray.200")} py={10}>
       <Container as={Stack} maxW={"100%"}  color="#4f585e" px="50px">
@@ -68,7 +72,7 @@ export default function LargeWithLogoCentered() {
                 style={{ textDecoration: "none" }}
                 href={"#"}
               >
-                Partner with PharmEasy
+                Partner with {tenant.title}
               </Link>
             </Stack>
             {/* ok */}
@@ -110,110 +114,22 @@ export default function LargeWithLogoCentered() {
             >
               Featured Categories
             </Heading>
-            <Link
+            {
+              categories.map((category)=>{
+                return(
+                  <Link
               style={{ textDecoration: "none" }}
               href={"#"}
             >
-              Covid Essentials{" "}
+              {category.name}
             </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Personal Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={
-                "#"
-              }
-            >
-              Health Food and Drinks
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Skin Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Home Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Ayurvedic Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Sexual Wellness
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Fitness & Supplements
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Mother and Baby Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Healthcare Devices
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={
-                "#"
-              }
-            >
-              Surgicals and Dressings
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Health Condition
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Diabetic Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Elderly Care
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={
-                "#"
-              }
-            >
-              Accessories And Wearables
-            </Link>
-            <Link
-              style={{ textDecoration: "none" }}
-              href={"#"}
-            >
-              Beauty
-            </Link>
+                )
+              })
+            }
+            
+            
           </Stack>
-          <Stack align={"flex-start"} spacing="22px">
+          {/* <Stack align={"flex-start"} spacing="22px">
             <Stack align={"flex-start"} spacing="6px">
               <Heading
                 marginBottom="8px"
@@ -294,7 +210,7 @@ export default function LargeWithLogoCentered() {
                 Return Policy
               </Link>
             </Stack>
-          </Stack>
+          </Stack> */}
           <Stack
             align="flex-start"
             spacing="6px"
@@ -369,39 +285,10 @@ export default function LargeWithLogoCentered() {
         </SimpleGrid>
       </Container>
       <Flex paddingBottom="20px" px={10} justify="space-between" >
-      <Stack
-            align="flex-start"
-            spacing="6px"
-            width="60%"
-            // direction={"row"}
-          >
-            <Heading
-              marginBottom="12px"
-              fontSize="16px"
-              fontWeight="700"
-              color="#4f585e"
-              paddingTop="10"
-            >
-              OUR PARTNERS
-            </Heading>
-            <Stack direction={"row"} align={"center"} spacing="5">
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/af0c6812.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/0e010044.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/1066bb1f.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/3a1a533d.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/fbea1701.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/4733a49d.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/b278e536.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/0aca2077.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/44a51ca5.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/d058b00d.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/e9445364.svg" />
-                <Image w="2.6rem" src="https://assets.pharmeasy.in/web-assets/dist/6e09c713.svg" />
-            </Stack>
-            </Stack>
+
             <Flex align="end" width="22%">
               <Text pt={6} fontSize={"md"}  color="#4f585e" textAlign="left" width="100%"  py="6px">
-                © 2022 PharmEasy. All Rights Reserved
+                © {new Date().getFullYear()} {tenant.title} All Rights Reserved
               </Text>
             </Flex>
       </Flex>

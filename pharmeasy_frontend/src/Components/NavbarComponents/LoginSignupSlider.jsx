@@ -21,10 +21,15 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { registerAuthUser } from "../../Redux/Auth/action";
-import { LoginIndivisualSlider } from "./LoginIndivisualSlider";
+import  LoginIndivisualSlider from "./LoginIndivisualSlider";
 import { LoginSLider } from "./LoginSlider";
+import { register } from "../../api/authApi";
+import {authApi} from '../../api/index';
+import { storeToken } from "../../utils/generalUtils";
 
 export function LoginSignupSlider() {
+  const tenant = useSelector((store)=>store.tenant.details)
+  
 
   const toast= useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,10 +42,84 @@ export function LoginSignupSlider() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [reenterPassword, setReenterPassword] = useState("");
+  const [phone_number, setPhoneNumber] = useState("");
+  const [showOtp, setShowOtp] = useState(false);
+  const [otp, setOtp] = useState("")
+  const [otpToken, setOtpToken] = useState("");
+  
+
 
   const dispatch = useDispatch();
-  const handleRegister = () => {
-    console.log("ok");
+  const loginSuccess = (response)=>{
+    storeToken(response.data.token.access)
+  }
+  const verifyOtp = async () => {
+    
+    try {
+        const payload = {
+            phone_number,
+            token:otpToken,
+            otp
+        }
+
+            authApi.verifyOtp(payload).then((res)=>{
+                setShowOtp(false);
+                console.log(res,"res");
+                toast({
+                  title: `login successful`,
+                  status: "success",
+                  duration: 3000,
+                  isClosable: true,
+                });
+                loginSuccess(res)
+
+
+            }).catch((err)=>{
+              toast({
+                title: `${err.message}`,
+                status: "error",
+                duration: 3000,
+                isClosable: true,
+              });
+            })
+            
+    } catch (error) {
+      toast({
+        title: `${error.message}`,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+}
+  const SendOtp = async () => {
+    
+    try {
+        const payload = {
+            phone_number
+        }
+        
+        const res = await authApi.sendOtp(payload);
+        console.log(res,"response");
+        
+        if (res) {
+            const otpToken = res.data.message
+           setOtpToken(otpToken)
+            
+            toast({
+              title: 'otp is sent successfully',
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+          setShowOtp(true)
+           
+        }
+    } catch (error) {
+        toast.error(error.message)
+    }
+}
+  const handleRegister =async () => {
     if (name && email && password) {
       if (password.length < 6) {
         toast({
@@ -61,10 +140,22 @@ export function LoginSignupSlider() {
           name: name,
           email: email,
           password: password,
+          phone_number: phone_number,
+          inventory:null,
+          role:"C",
+          device_id:""
         };
-        dispatch(
-          registerAuthUser(payload,toast)
-        );
+        const response = await register(payload);
+        if (response.data.status === 201){
+          toast({
+            title: 'user is registered successfully',
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+          });
+          SendOtp()
+        }
+
         // onClose()
       }
     } else {
@@ -135,7 +226,7 @@ export function LoginSignupSlider() {
               >
                 <Image
                   h="62%"
-                  src="https://assets.pharmeasy.in/web-assets/dist/fca22bc9.png"
+                  src={tenant.logo}
                 />
               </Flex>
               <Flex
@@ -194,6 +285,21 @@ export function LoginSignupSlider() {
                       setEmail(e.target.value);
                     }}
                   />
+                   <Input
+                    h="2.8rem"
+                    ref={firstField}
+                    // id="email"
+                    type="number"
+                    pattern="^\+?[1-9]\d{1,14}$"
+                    letterSpacing=".2px"
+                    outline=".1px solid black"
+                    focusBorderColor="none"
+                    placeholder="Enter your mobile number"
+                    value={phone_number}
+                    onChange={(e) => {
+                      setPhoneNumber(e.target.value)
+                    }}
+                  />
 
                   <InputGroup h="2.8rem">
                     <Input
@@ -226,19 +332,40 @@ export function LoginSignupSlider() {
                       setReenterPassword(e.target.value);
                     }}
                   />
+                  {
+                    showOtp?(
+                      <Input
+                    h="2.8rem"
+                    letterSpacing=".2px"
+                    outline=".1px solid black"
+                    focusBorderColor="none"
+                    type={"number"}
+                    placeholder="Enter otp"
+                    value={otp}
+                    onChange={(e) => {
+                      setOtp(e.target.value)
+                    }}
+                  />
+                    ):(
+                      <></>
+                    )
+                  }
                 </Stack>
               </Box>
-              {/* <Button
+              <Button
                 h="2.8rem"
                 variant="#0f847e"
                 bg="#0f847e"
                 color="#fff"
                 _hover={{ bg: "#159a94" }}
-                onClick={handleRegister}
+                onClick={()=>{
+                  showOtp? verifyOtp(): handleRegister()
+                }}
               >
-                Continue
-              </Button> */}
-              <LoginSLider handleRegister={handleRegister} />
+                {showOtp? `verify otp`: `register`}
+              </Button>
+              {/* <LoginSLider handleRegister={handleRegister} /> */}
+              
             </Stack>
             <Text fontSize="12px" color="#4f585e" py="20px">
               By clicking continue, you agree with our{" "}

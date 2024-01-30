@@ -7,6 +7,8 @@ import {
 
 import Slider from 'react-slick';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 // Settings for the slider
 const settings = {
@@ -22,31 +24,17 @@ const settings = {
 };
 
 export default function HomeCarousal() {
+  const offers = useSelector((store)=>store.offers.list)
 
   const [slider, setSlider] = React.useState()
+  const navigate = useNavigate()
 
   const top = useBreakpointValue({ base: '90%', md: '50%' });
+  console.log(offers,"offers");
 
 
   
-  const cards = [
-    {
-      image:
-        'https://cms-contents.pharmeasy.in/banner/11968e3c347-MEGA20_Dweb.jpg?dim=1440x0&dpr=1&q=100',
-    },
-    {
-      image:
-        'https://cms-contents.pharmeasy.in/banner/5aeebb1a134-Dweb2.jpg?dim=1440x0&dpr=1&q=100',
-    },
-    {
-      image:
-        'https://cms-contents.pharmeasy.in/banner/b287e359a6f-Dweb.jpg?dim=1440x0&dpr=1&q=100',
-    },
-    {
-      image:
-        'https://cms-contents.pharmeasy.in/banner/374ed4b3c4e-Liveasy_diabetic_Dweb.jpg?dim=1440x0&dpr=1&q=100',
-    },
-  ];
+
 
   return (
     <Box
@@ -108,15 +96,16 @@ export default function HomeCarousal() {
       </IconButton>
       {/* Slider */}
       <Slider {...settings} ref={(slider) => setSlider(slider)}>
-        {cards.map((card, index) => (
+        {offers && offers.length!==0 && offers.map((offer, index) => (
           <Box
+            onClick={()=>{navigate(offer.action_link)}}
             key={index}
             height={"260px"}
             position="relative"
             backgroundPosition="center"
             backgroundRepeat="no-repeat"
             backgroundSize="cover"
-            backgroundImage={`url(${card.image})`}>
+            backgroundImage={offer.desktop_view_image}>
           </Box>
         ))}
       </Slider>

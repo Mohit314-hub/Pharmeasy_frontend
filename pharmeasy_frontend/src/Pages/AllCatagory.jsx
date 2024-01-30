@@ -14,11 +14,11 @@ const AllCatagory = () => {
       margin="auto"
       //  overflow="hidden"
       >
-        <Center   my="30px">
+        {/* <Center   my="30px">
           <AllCatagoryCarousel/>
-        </Center>
+        </Center> */}
           <AllCatagorymenu/>
-          <AllCatagoryDescription/>
+          {/* <AllCatagoryDescription/> */}
       </Box>
           <StatisticsAllCatagory/>
     </Box>

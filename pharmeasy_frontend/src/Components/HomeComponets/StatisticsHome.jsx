@@ -1,7 +1,9 @@
 import { Box, Flex, Heading, Image, Text } from '@chakra-ui/react'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 const StatisticsHome = () => {
+    const tenant = useSelector((store)=>store.tenant.details)
   return (
     <Box
     //  border="2px solid red"
@@ -20,7 +22,7 @@ const StatisticsHome = () => {
             <Box w="25%">
                 <Image src="https://assets.pharmeasy.in/web-assets/dist/92c372bb.svg"/>
                 <Heading letterSpacing=".8px" py={"25px"} fontSize="45px" fontWeight="700">8.8 Million</Heading>
-                <Text wordSpacing=".5px" fontSize="18px" fontWeight="600" >PharmEasy Orders as of FY21</Text>
+                <Text wordSpacing=".5px" fontSize="18px" fontWeight="600" >{tenant.title} Orders as of FY21</Text>
             </Box>
             <Box w="25%">
                 <Image src="https://assets.pharmeasy.in/web-assets/dist/773ae9c5.svg"/>

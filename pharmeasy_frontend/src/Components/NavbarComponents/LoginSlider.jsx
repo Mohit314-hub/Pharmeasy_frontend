@@ -16,94 +16,79 @@ import {
   Image,
   InputRightElement,
   InputGroup,
+  FormHelperText,
+  FormErrorMessage,
   Center,
   useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAuthUser } from "../../Redux/Auth/action";
+import {login} from '../../api/authApi'
+import { storeToken } from "../../utils/generalUtils";
 
-export function LoginSLider({ handleRegister }) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+export function LoginSLider(props) {
+  
   const firstField = React.useRef();
+  const tenant = useSelector((store)=>store.tenant.details)
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [reenterPassword, setReenterPassword] = useState("");
+  const [phone_number, setPhoneNumber] = useState("")
 
   const isRegistered = useSelector((store) => store.auth.isRegistered);
   const isAuth = useSelector((store) => store.auth.isAuth);
-  console.log(isAuth);
 
-  const toast= useToast()
-
-  console.log(isRegistered, "isRegistered");
+  const toast = useToast();
   const dispatch = useDispatch();
-  const handleLogin = () => {
-    console.log("ok");
-    if (email && password) {
-      if (password !== reenterPassword) {
-        toast({
-          title: "password didn't match",
-          status: "info",
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        let payload = { email: email, password: password };
-        dispatch(loginAuthUser(payload,toast));
-      }
-    } else {
+  const loginSuccess = (response)=>{
+    storeToken(response.data.token.access)
+  }
+  const handleLogin = async () => {
+    if (!phone_number || !password) {
+     
       toast({
-        title: "Please fill all the fields",
+        title: 'Please fill all the fields',
         status: "info",
         duration: 3000,
         isClosable: true,
       });
     }
-  };
-  const handleOpen = () => {
-    handleRegister();
-  };
-  useEffect(() => {
-    if (isRegistered) {
-      onOpen();
+    const payload = {
+      phone_number: phone_number,
+      password: password
     }
-  }, [isRegistered,onOpen]);
+    login(payload).then((res)=>{
+      loginSuccess(res);
+     
+    }).catch((err)=>{
+      toast({
+        title: 'something went wrong',
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    })
+  };
 
   useEffect(() => {
     if (isAuth) {
-      onClose();
+     
       // alert("Logged in Successfully")
     } else {
       // alert("Invalid user")
     }
-  }, [isAuth,onClose]);
+  }, [isAuth, dispatch]);
   return (
     <div>
       {/* <Button leftIcon={<AddIcon />} colorScheme='teal' onClick={onOpen}> */}
-      <Center>
-        <Button
-          w="100%"
-          h="2.8rem"
-          variant="#0f847e"
-          bg="#0f847e"
-          color="#fff"
-          _hover={{ bg: "#159a94" }}
-          onClick={handleOpen}
-        >
-          Continue
-        </Button>
-      </Center>
+      
       {/* </Button> */}
       <Drawer
-        isOpen={isOpen}
         placement="right"
         initialFocusRef={firstField}
-        onClose={onClose}
         position="relative"
         size={"sm"}
       >
@@ -141,7 +126,7 @@ export function LoginSLider({ handleRegister }) {
               >
                 <Image
                   h="62%"
-                  src="https://assets.pharmeasy.in/web-assets/dist/fca22bc9.png"
+                  src={tenant.logo}
                 />
               </Flex>
               <Flex
@@ -171,19 +156,19 @@ export function LoginSLider({ handleRegister }) {
                   Quick Login
                 </FormLabel>
                 <Stack spacing="20px">
-                  <Input
+                <Input
                     h="2.8rem"
                     ref={firstField}
                     // id="email"
-                    type="email"
-                    pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"
+                    type="number"
+                    pattern="^\+?[1-9]\d{1,14}$"
                     letterSpacing=".2px"
                     outline=".1px solid black"
                     focusBorderColor="none"
-                    placeholder="Enter your Email"
-                    value={email}
+                    placeholder="Enter your mobile number"
+                    value={phone_number}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setPhoneNumber(e.target.value)
                     }}
                   />
 
@@ -206,18 +191,7 @@ export function LoginSLider({ handleRegister }) {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <Input
-                    h="2.8rem"
-                    letterSpacing=".2px"
-                    outline=".1px solid black"
-                    focusBorderColor="none"
-                    type={"password"}
-                    placeholder="Re-enter password"
-                    value={reenterPassword}
-                    onChange={(e) => {
-                      setReenterPassword(e.target.value);
-                    }}
-                  />
+                 
                 </Stack>
               </Box>
               <Button

@@ -1,6 +1,6 @@
 import axios from "axios"
 import { getCartItems } from "../Cart/action"
-
+import { register, sendOtp } from "../../api/authApi"
 //Action types
 export const authActions={
     REGISTER_AUTH_REQUEST: 'REGISTER_AUTH_REQUEST',
@@ -37,11 +37,7 @@ export const registerAuthFailure=()=>{
 export const registerAuthUser= (userData,toast)=>(dispatch,getState)=>{
 
     dispatch(registerAuthRequest())
-    axios({
-        url: 'https://pharmeasybackend-production.up.railway.app/register', 
-        method:"POST",
-        data: userData
-    }).then((res)=>{
+    register(userData).then((res)=>{
 
         dispatch(registerAuthSuccess())
 
@@ -51,6 +47,14 @@ export const registerAuthUser= (userData,toast)=>(dispatch,getState)=>{
             duration: 5000,
             isClosable: true,
           });
+        sendOtp(userData).then((res)=>{
+            toast({
+                title: 'Otp is sent successfully',
+                status: "success",
+                duration: 5000,
+                isClosable: true,
+              });
+        })
     }).catch((err)=>{
         dispatch(registerAuthFailure())
         toast({

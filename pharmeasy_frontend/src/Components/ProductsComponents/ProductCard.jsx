@@ -2,9 +2,9 @@ import { Box, Center, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ProductCard = ({elem}) => {
+const ProductCard = (props) => {
   return (
-    <Link to={`/healthcare/products/${elem._id}`}> <Box
+    <Link to={`/`}> <Box
       h="340px"
       w="231px"
       padding="20px 10px"
@@ -24,7 +24,7 @@ const ProductCard = ({elem}) => {
         //   w="8rem"
           h="9rem"
           objectFit="cover"
-          src={elem.img1}
+          src={props?.image}
         />
       </Center>
       <Box h="35%" >
@@ -37,15 +37,15 @@ const ProductCard = ({elem}) => {
          marginY="10px"
         //   border="1px solid red"
         >
-          {elem.desc}
+          {props?.description}
         </Text>
         <Box height="1.2rem" >
-        {elem.originalPrice &&
+        {props?.oldprice &&
         <Flex height="1.2rem" align="center" gap="15px">
           <Text fontSize="13px" fontWeight="500" color="silver">
-            MRP <span style={{ textDecoration: "line-through" }}>₹{elem.originalPrice}</span>
+            MRP <span style={{ textDecoration: "line-through" }}>₹{props?.oldprice}</span>
           </Text>
-          <Flex
+          {/* <Flex
             align="center"
             justify="start"
             px="6px"
@@ -57,12 +57,12 @@ const ProductCard = ({elem}) => {
             bgImage='url("https://assets.pharmeasy.in/web-assets/dist/1602b4ce.svg")'
           >
             {elem.offer}% OFF
-          </Flex>
+          </Flex> */}
         </Flex>
         }
         </Box>
         <Text fontSize="15px" fontWeight="700">
-          ₹{elem.newPrice}
+          ₹{props?.price}
         </Text>
       </Box>
     </Box></Link>

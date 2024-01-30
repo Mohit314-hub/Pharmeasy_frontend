@@ -14,27 +14,46 @@ import {
     Center,
   } from "@chakra-ui/react";
   import React, { useState } from "react";
-  import { useDispatch } from "react-redux";
+  import { useDispatch, useSelector } from "react-redux";
   import { registerAuthUser } from "../../Redux/Auth/action";
+import LoginIndivisualSlider  from "./LoginIndivisualSlider";
+import { LoginSLider } from "./LoginSlider";
+import { placeOrder } from "../../api/OrdersApi";
   
   export default function UploadSlider() {
     const [file, setFile] = useState(null);
     const [isOpen, setIsOpen] = useState(false);
     const dispatch = useDispatch();
+    const tenant = useSelector((store)=>store.tenant.details)
   
     const handleFileChange = (e) => {
       setFile(e.target.files[0]);
     };
+    const isLoggedIn = localStorage.getItem("auth_token");
+    const [showLogin, setShowLogin] = useState(false)
+    const placeOrderWithPrescription = async (data)=>{
+      const response = await placeOrder(data);
+      console.log(response,"response");
+
+    }
   
     const handleUpload = () => {
-      if (file) {
-        let formData = new FormData();
-        formData.append("file", file);
-        dispatch(registerAuthUser(formData));
-      } else {
-        // Handle case when no file is selected
-        console.log("Please select a file.");
+      if(!isLoggedIn){
+        setShowLogin(true)
       }
+        else{
+          if (file) {
+            let formData = new FormData();
+            formData.append("itemsList", file);
+            placeOrderWithPrescription(formData)
+            
+          } else {
+            // Handle case when no file is selected
+            console.log("Please select a file.");
+          }
+
+        }
+        
       // Close the drawer
       setIsOpen(false);
     };
@@ -60,7 +79,8 @@ import {
         </Box>
   
         {/* Upload Drawer */}
-        <Drawer
+     
+          <Drawer
           isOpen={isOpen}
           placement="right"
           onClose={() => setIsOpen(false)}
@@ -69,53 +89,66 @@ import {
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
+             {
+        showLogin?(<LoginSLider/>):(
             
-            {/* Banner Section Inside the Slider */}
-            <DrawerHeader borderBottomWidth="1px" bg="#0f847e" color="white">
-              <Center>
+            <>
+              <DrawerHeader borderBottomWidth="1px" bg="#0f847e" color="white">
+                <Center>
+                  <Box>
+                    <Image
+                      h="62px"
+                      src={tenant.logo}
+                      alt="logo"
+                    />
+                  </Box>
+                </Center>
+    
+                {/* Margin below the banner */}
+                <Box pt={6}>
+                  <Text fontSize="lg" fontWeight="bold" color="white">
+                    Upload Prescription
+                  </Text>
+                </Box>
+              </DrawerHeader>
+    
+            
+              <DrawerBody>
                 <Box>
-                  <Image
-                    h="62px"
-                    src="https://assets.pharmeasy.in/web-assets/dist/fca22bc9.png"
-                    alt="PharmEasy Logo"
+                  <Input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept=".jpg, .jpeg, .png, .pdf"
                   />
                 </Box>
-              </Center>
-  
-              {/* Margin below the banner */}
-              <Box pt={6}>
-                <Text fontSize="lg" fontWeight="bold" color="white">
-                  Upload Prescription
-                </Text>
-              </Box>
-            </DrawerHeader>
-  
-            {/* Upload Section Inside the Slider */}
-            <DrawerBody>
-              <Box>
-                <Input
-                  type="file"
-                  onChange={handleFileChange}
-                  accept=".jpg, .jpeg, .png, .pdf"
-                />
-              </Box>
-              <Center mt={4}>
-                <Text fontSize="sm" color="gray.500">
-                  Allowed formats: PDF, PNG, JPG
-                </Text>
-              </Center>
-              <Center mt={4}>
-                <Button
-                  onClick={handleUpload}
-                  colorScheme="teal"
-                  size="md"
-                >
-                  Upload
-                </Button>
-              </Center>
-            </DrawerBody>
+                <Center mt={4}>
+                  <Text fontSize="sm" color="gray.500">
+                    Allowed formats: PDF, PNG, JPG
+                  </Text>
+                </Center>
+                <Center mt={4}>
+                  <Button
+                    onClick={()=>{
+                      if(isLoggedIn){
+                        handleUpload()
+                      }else{
+                        setShowLogin(true)
+                      }
+                    }}
+                    colorScheme="teal"
+                    size="md"
+                  >
+                    Upload
+                  </Button>
+                </Center>
+                
+              </DrawerBody>
+            </>
+           )
+          }
           </DrawerContent>
         </Drawer>
+       
       </div>
     );
   }

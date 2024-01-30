@@ -23,38 +23,32 @@ import {
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAuthUser, registerAuthUser } from "../../Redux/Auth/action";
+import {login} from '../../api/authApi'
+import { storeToken } from "../../utils/generalUtils";
 
-export function LoginIndivisualSlider({ handleRegister, color, font }) {
+export default function LoginIndivisualSlider({ handleRegister, color, font }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const firstField = React.useRef();
+  const tenant = useSelector((store)=>store.tenant.details)
 
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [reenterPassword, setReenterPassword] = useState("");
+  const [phone_number, setPhoneNumber] = useState("")
 
   const isRegistered = useSelector((store) => store.auth.isRegistered);
   const isAuth = useSelector((store) => store.auth.isAuth);
 
   const toast = useToast();
   const dispatch = useDispatch();
-  const handleLogin = () => {
-    if (email && password) {
-      if (password !== reenterPassword) {
-        toast({
-          title: "password didn't match",
-          status: "info",
-          duration: 3000,
-          isClosable: true,
-        });
-      } else {
-        let payload = { email: email, password: password };
-        dispatch(loginAuthUser(payload,toast));
-      }
-    } else {
+  const loginSuccess = (response)=>{
+    storeToken(response.data.token.access)
+  }
+  const handleLogin = async () => {
+    if (!phone_number || !password) {
+     
       toast({
         title: 'Please fill all the fields',
         status: "info",
@@ -62,6 +56,21 @@ export function LoginIndivisualSlider({ handleRegister, color, font }) {
         isClosable: true,
       });
     }
+    const payload = {
+      phone_number: phone_number,
+      password: password
+    }
+    login(payload).then((res)=>{
+      loginSuccess(res);
+      onClose();
+    }).catch((err)=>{
+      toast({
+        title: 'something went wrong',
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    })
   };
 
   useEffect(() => {
@@ -123,7 +132,7 @@ export function LoginIndivisualSlider({ handleRegister, color, font }) {
               >
                 <Image
                   h="62%"
-                  src="https://assets.pharmeasy.in/web-assets/dist/fca22bc9.png"
+                  src={tenant.logo}
                 />
               </Flex>
               <Flex
@@ -153,19 +162,19 @@ export function LoginIndivisualSlider({ handleRegister, color, font }) {
                   Quick Login
                 </FormLabel>
                 <Stack spacing="20px">
-                  <Input
+                <Input
                     h="2.8rem"
                     ref={firstField}
                     // id="email"
-                    type="email"
-                    pattern="[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*"
+                    type="number"
+                    pattern="^\+?[1-9]\d{1,14}$"
                     letterSpacing=".2px"
                     outline=".1px solid black"
                     focusBorderColor="none"
-                    placeholder="Enter your Email"
-                    value={email}
+                    placeholder="Enter your mobile number"
+                    value={phone_number}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setPhoneNumber(e.target.value)
                     }}
                   />
 
@@ -188,18 +197,7 @@ export function LoginIndivisualSlider({ handleRegister, color, font }) {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  <Input
-                    h="2.8rem"
-                    letterSpacing=".2px"
-                    outline=".1px solid black"
-                    focusBorderColor="none"
-                    type={"password"}
-                    placeholder="Re-enter password"
-                    value={reenterPassword}
-                    onChange={(e) => {
-                      setReenterPassword(e.target.value);
-                    }}
-                  />
+                 
                 </Stack>
               </Box>
               <Button

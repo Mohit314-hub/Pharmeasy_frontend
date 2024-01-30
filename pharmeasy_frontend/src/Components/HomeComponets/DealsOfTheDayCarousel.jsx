@@ -4,9 +4,24 @@ import { Box, Flex, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import CountdownTimer  from "./CountdownTimer";
 import DealsOfTheDayCarouselElement from "./DealsOfTheDayCarouselElement";
+import { useState, useEffect } from "react";
+import { fetchHomePageProducts } from "../../api/HomeAPi";
 
 
-const DealsOfTheDayCarousel = () => {
+const DealsOfTheDayCarousel = ({category}) => {
+  const [products, setProducts] = useState([])
+  const getProducts = async ()=>{
+    const data = {
+      name: category.name,
+      id: category.id
+    }
+    const response = await fetchHomePageProducts(data);
+    console.log(response,"response products");
+    setProducts(response.data.data)
+  }
+  useEffect(()=>{
+    getProducts()
+  },[])
   return (
       <Flex h="27rem"  align="end" position="relative" >
         <Box
@@ -32,10 +47,10 @@ const DealsOfTheDayCarousel = () => {
             <Image src="https://assets.pharmeasy.in/web-assets/dist/cc9b301d.svg" />
             <Box borderRight="3px solid #f76b6c" padding=" 0 25px">
                 <Text fontSize="20px" fontWeight="700" color="#4f585e"  >
-                    Deals of the Day
+                    {category.name}
                 </Text>
             </Box>
-            <CountdownTimer/>
+            {/* <CountdownTimer/> */}
           </Flex>
           <Flex className="right" align="center">
             <Text fontSize="18px" fontWeight="600" color="#0f847e">
@@ -44,7 +59,7 @@ const DealsOfTheDayCarousel = () => {
             <Flex className="arrow" w="9rem" h="100%"></Flex>
           </Flex>
         </Flex>
-        <DealsOfTheDayCarouselElement />
+        <DealsOfTheDayCarouselElement products={products}/>
       </Box>
     </Flex>
   );
